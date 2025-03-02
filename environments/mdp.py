@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 import networkx as nx
 import numpy as np
 from dataclasses import dataclass
@@ -24,6 +24,7 @@ def sample_mdp(
     depth: int,
     branching_factor: int,
     terminal_reward_dist: rv_frozen,
+    intermediate_reward_dist: Optional[rv_frozen] = None,
     seed: int = 1,
 ) -> Tuple[nx.DiGraph, Node, float]:
     np.random.seed(seed)
@@ -42,7 +43,13 @@ def sample_mdp(
                 child_name = f"{curr.name}*{i}"
                 child_depth = curr.depth + 1
                 child_is_leaf = child_depth == depth
-                child_reward = float(terminal_reward_dist.rvs()) if child_is_leaf else 0
+
+                if child_is_leaf:
+                    child_reward = float(terminal_reward_dist.rvs())
+                elif intermediate_reward_dist is not None:
+                    child_reward = float(intermediate_reward_dist.rvs())
+                else:
+                    child_reward = 0
 
                 child = Node(
                     name=child_name,
@@ -58,6 +65,16 @@ def sample_mdp(
                 build_tree(child)
 
     build_tree(root)
-    best_reward = max(node.reward for node in tree.nodes)
+    # best_reward = max(node.reward for node in tree.nodes)
+    best_reward = best_total_reward(tree, root)
 
     return tree, root, best_reward
+
+
+def best_total_reward(tree: nx.DiGraph, curr: Node) -> float:
+    if curr.is_leaf:
+        return curr.reward
+
+    return curr.reward + max(
+        best_total_reward(tree, child) for child in tree.successors(curr)
+    )

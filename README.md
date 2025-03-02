@@ -5,7 +5,7 @@ Tree-search algorithms examples on toy Markov Decision Process (MDP) environment
 ## Setup
 
 - `uv sync`
-- `uv python methods/{ALG_NAME}.py`
+- `uv run python methods/{ALG_NAME}.py`
 
 ## List of algorithms
 

@@ -22,7 +22,7 @@ def random_search(tree: nx.DiGraph, root: Node) -> List[Node]:
 
 
 # Sample an MDP
-BRANCHING_FACTOR = 5
+BRANCHING_FACTOR = 10
 DEPTH = 5
 TERMINAL_REWARD_DIST = st.norm(loc=0, scale=2)
 
