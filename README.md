@@ -9,4 +9,4 @@ Tree-search algorithms examples on toy Markov Decision Process (MDP) environment
 
 ## List of algorithms
 
-- [Best-of-N Random Search]()
+- [Best-of-N Random Search](https://github.com/wiseodd/treesearch-examples/blob/main/methods/random_search.py)
