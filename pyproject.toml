@@ -1,0 +1,14 @@
+[project]
+name = "treesearch-examples"
+version = "0.1.0"
+description = "Tree search algorithms by (toy) examples."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["networkx>=3.4.2", "numpy>=2.2.3", "scipy>=1.15.2"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.setuptools]
+py-modules = ["environments"]
