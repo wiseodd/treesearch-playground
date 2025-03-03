@@ -5,8 +5,6 @@ import numpy as np
 
 from environments.mdp import sample_mdp, Node
 
-np.random.seed(1)
-
 
 def random_search(tree: nx.DiGraph, root: Node) -> List[Node]:
     curr: Node = root
