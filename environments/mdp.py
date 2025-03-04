@@ -28,16 +28,18 @@ def sample_mdp(
     """Sample a tree from the Markov decision process.
 
     Args:
-        depth: The depth of the tree.
-        branching_factor: The branching factor of the tree.
-        terminal_reward_dist: The distribution of rewards at the leaf nodes.
-        intermediate_reward_dist: The distribution of rewards at internal, non-leaf nodes.
+    -----
+        `depth`: The depth of the tree.
+        `branching_factor`: The branching factor of the tree.
+        `terminal_reward_dist`: The distribution of rewards at the leaf nodes.
+        `intermediate_reward_dist`: The distribution of rewards at internal, non-leaf nodes.
 
     Returns:
-        tree: A `networkx` tree where each node is an object of `Node`. The reward
+    --------
+        `tree`: A `networkx` tree where each node is an object of `Node`. The reward
             at each node is sampled from the specified reward distribution(s).
-        root: A `Node` object which is the root of `tree`.
-        best_reward: The maximum total reward of the tree. I.e., the reward associated with
+        `root`: A `Node` object which is the root of `tree`.
+        `best_reward`: The maximum total reward of the tree. I.e., the reward associated with
             the optimal path in the tree.
     """
     tree = nx.DiGraph()
@@ -86,11 +88,13 @@ def best_total_reward(tree: nx.DiGraph, curr: Node) -> float:
     This is done through an exhaustive search!
 
     Args:
-        tree: The tree search space.
-        curr: The starting point of the search (e.g. root).
+    -----
+        `tree`: The tree search space.
+        `curr`: The starting point of the search (e.g. root).
 
     Returns:
-        best_reward: The optimal reward.
+    --------
+        `best_reward`: The optimal reward.
     """
     if curr.is_leaf:
         return curr.reward
