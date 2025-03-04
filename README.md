@@ -1,6 +1,6 @@
-# Treesearch Examples
+# Treesearch Playground
 
-Tree-search algorithms examples on toy Markov Decision Process (MDP) environments.
+Treesearch algorithms examples on toy Markov Decision Process (MDP) environments.
 
 ## Setup
 
@@ -13,7 +13,7 @@ Tree-search algorithms examples on toy Markov Decision Process (MDP) environment
 - [Greedy Search](https://github.com/wiseodd/treesearch-examples/blob/main/methods/greedy_search.py)
 - [Beam Search](https://github.com/wiseodd/treesearch-examples/blob/main/methods/beam_search.py)
 
-## Search spaces
+## Environments
 
 All algorithms run on toy tree search spaces, which can be controlled in terms of their sizes
 (depth, branching factor) and in terms of their reward distributions.
