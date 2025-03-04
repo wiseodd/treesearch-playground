@@ -1,6 +1,5 @@
 from typing import Optional, Tuple
 import networkx as nx
-import numpy as np
 from dataclasses import dataclass
 
 from scipy.stats.distributions import rv_frozen
@@ -25,10 +24,22 @@ def sample_mdp(
     branching_factor: int,
     terminal_reward_dist: rv_frozen,
     intermediate_reward_dist: Optional[rv_frozen] = None,
-    seed: int = 1,
 ) -> Tuple[nx.DiGraph, Node, float]:
-    np.random.seed(seed)
+    """Sample a tree from the Markov decision process.
 
+    Args:
+        depth: The depth of the tree.
+        branching_factor: The branching factor of the tree.
+        terminal_reward_dist: The distribution of rewards at the leaf nodes.
+        intermediate_reward_dist: The distribution of rewards at internal, non-leaf nodes.
+
+    Returns:
+        tree: A `networkx` tree where each node is an object of `Node`. The reward
+            at each node is sampled from the specified reward distribution(s).
+        root: A `Node` object which is the root of `tree`.
+        best_reward: The maximum total reward of the tree. I.e., the reward associated with
+            the optimal path in the tree.
+    """
     tree = nx.DiGraph()
     root = Node(name=ROOT_NAME, depth=0, is_leaf=False, reward=0)
     tree.add_node(root)
@@ -65,13 +76,22 @@ def sample_mdp(
                 build_tree(child)
 
     build_tree(root)
-    # best_reward = max(node.reward for node in tree.nodes)
     best_reward = best_total_reward(tree, root)
 
     return tree, root, best_reward
 
 
 def best_total_reward(tree: nx.DiGraph, curr: Node) -> float:
+    """Find the best total reward (over paths) in the tree.
+    This is done through an exhaustive search!
+
+    Args:
+        tree: The tree search space.
+        curr: The starting point of the search (e.g. root).
+
+    Returns:
+        best_reward: The optimal reward.
+    """
     if curr.is_leaf:
         return curr.reward
 

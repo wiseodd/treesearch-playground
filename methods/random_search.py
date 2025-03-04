@@ -5,6 +5,8 @@ import numpy as np
 
 from environments.mdp import sample_mdp, Node
 
+np.random.seed(123)
+
 
 def random_search(tree: nx.DiGraph, root: Node) -> List[Node]:
     curr: Node = root
@@ -24,9 +26,7 @@ BRANCHING_FACTOR = 10
 DEPTH = 5
 TERMINAL_REWARD_DIST = st.norm(loc=0, scale=2)
 
-tree, root, best_reward = sample_mdp(
-    DEPTH, BRANCHING_FACTOR, TERMINAL_REWARD_DIST, seed=123
-)
+tree, root, best_reward = sample_mdp(DEPTH, BRANCHING_FACTOR, TERMINAL_REWARD_DIST)
 print(f"Tree: {tree}; Best reward: {best_reward:.3f}")
 
 # Run the search

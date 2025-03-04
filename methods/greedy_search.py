@@ -5,6 +5,8 @@ import numpy as np
 
 from environments.mdp import sample_mdp, Node
 
+np.random.seed(123)
+
 
 def greedy_search(tree: nx.DiGraph, root: Node) -> List[Node]:
     curr: Node = root
@@ -30,7 +32,6 @@ tree, root, best_reward = sample_mdp(
     BRANCHING_FACTOR,
     terminal_reward_dist=REWARD_DIST,
     intermediate_reward_dist=REWARD_DIST,
-    seed=123,
 )
 print(f"Tree: {tree}; Best reward: {best_reward:.3f}")
 
