@@ -12,6 +12,7 @@ Treesearch algorithms examples on toy Markov Decision Process (MDP) environments
 - [Best-of-N Random Search](https://github.com/wiseodd/treesearch-examples/blob/main/methods/random_search.py)
 - [Greedy Search](https://github.com/wiseodd/treesearch-examples/blob/main/methods/greedy_search.py)
 - [Beam Search](https://github.com/wiseodd/treesearch-examples/blob/main/methods/beam_search.py)
+- [MCTS](https://github.com/wiseodd/treesearch-examples/blob/main/methods/mcts.py)
 
 ## Environments
 
@@ -41,7 +42,4 @@ class Node:
     depth: int
     is_leaf: bool
     reward: float
-
-    def __hash__(self) -> int:
-        return hash(self.name)
 ```
