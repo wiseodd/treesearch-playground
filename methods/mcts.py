@@ -25,17 +25,27 @@ def mcts(
     root: Node,
     n_iters: int = 5000,
     gamma: float = math.sqrt(2),
-    max_child_to_expand: int = 5,
+    max_children: int = 5,
 ) -> Tuple[List[Node], float]:
+    assert tree.out_degree(root) >= max_children, (  # pyright: ignore
+        "Max children must be <= branching factor of the real tree"
+    )
+
     mcts_tree = nx.DiGraph()
     mcts_root = MCTSNode(real_node=root)
     mcts_tree.add_node(mcts_root)
 
     def select(node: MCTSNode) -> MCTSNode:
-        if mcts_tree.out_degree(node) == 0:
-            # Frontier node
+        n_children = len(list(mcts_tree.successors(node)))
+
+        # Limit exploration so that the search progresses depth-wise.
+        # Otherwise, if the branching factor is large, it will stuck
+        # at a particular level.
+        if n_children < max_children:
+            # Not fully expanded => select this
             return node
 
+        # Otherwise, it's fully expanded and pick a child with best UCT
         best_node = node
         best_uct = -np.inf
 
@@ -56,23 +66,16 @@ def mcts(
 
     def expand(node: MCTSNode) -> MCTSNode:
         children = list(tree.successors(node.real_node))
-
-        # Restrict the width of the search tree, to make sure the search
-        # progresses downward (doesn't become like BFS)
-        if len(children) > max_child_to_expand:
-            children = np.random.choice(
-                children, size=max_child_to_expand, replace=False
-            )
+        expanded_children = {child.real_node for child in mcts_tree.successors(node)}
 
         for child in children:
-            mcts_child = MCTSNode(child)
-            mcts_tree.add_node(mcts_child)
-            mcts_tree.add_edge(node, mcts_child)
+            if child not in expanded_children:
+                mcts_child = MCTSNode(child)
+                mcts_tree.add_node(mcts_child)
+                mcts_tree.add_edge(node, mcts_child)
+                return mcts_child
 
-        if node.real_node.is_leaf:
-            return node
-        else:
-            return np.random.choice(list(mcts_tree.successors(node)))
+        return node
 
     def rollout(node: MCTSNode) -> float:
         real_node = node.real_node
@@ -106,14 +109,7 @@ def mcts(
         if len(children) == 0:
             break
 
-        best_idx = np.argmax(
-            [
-                child.total_val / child.n_visits
-                for child in children
-                if child.n_visits > 0
-            ]
-        )
-        curr = children[best_idx]
+        curr = max(children, key=lambda child: child.total_val / child.n_visits)
         path.append(curr.real_node)
 
     return path, path[-1].reward
@@ -133,8 +129,13 @@ tree, root, best_reward = sample_mdp(
 print(f"Tree: {tree}; Best reward: {best_reward:.3f}")
 
 # Run the search
-n_iters = 5000
-res_path, res_reward = mcts(tree, root, n_iters=n_iters, max_child_to_expand=10)
+n_iters = 10000
+res_path, res_reward = mcts(
+    tree,
+    root,
+    n_iters=n_iters,
+    max_children=5,
+)
 print(
     f"[MCTS n_iters={n_iters}] Path length: {len(res_path)}, Reward: {res_reward:.3f}"
 )
